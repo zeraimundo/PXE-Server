@@ -55,7 +55,7 @@ sudo systemctl restart tftpd-hpa
 
 sudo mkdir  /srv/tftp
 cd  /srv/tftp
-wget https://deb.debian.org/debian/dists/bookworm/main/installer-amd64/current/images/netboot/netboot.tar.gz
+wget https://deb.debian.org/debian/dists/Debian11.8/main/installer-amd64/current/images/netboot/netboot.tar.gz
 tar xvzf netboot.tar.gz
 rm netboot.tar.gz
 chmod -R a+r *
