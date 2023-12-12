@@ -71,7 +71,7 @@ Na próxima etapa criaremos o diretório que disponibilizará os arquivos de ins
  ```bash
 mkdir  /srv/tftp
 ```
-Faremos o download dos arquivos de instalação que estão disponíveis no site oficial de downloads do Debian: https://deb.debian.org/debian/dists/bookworm/main/installer-amd64/current/images/netboot/
+Faremos o download dos arquivos de instalação que estão disponíveis no site oficial de downloads do Debian: https://deb.debian.org/debian/dists/Debian11.8/main/installer-amd64/current/images/netboot/
 
 Para o propósito deste tutorial faremos o download do arquivo netboot.tar.gz na pasta /srv/tftp, descompactaremos o seu conteúdo, excluiremos o arquivo .gz, daremos permissões necessárias para o seu funcionamento e criaremos links simbólicos (necessários para boot em computadores que usam UEFI).
 
