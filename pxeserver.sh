@@ -71,26 +71,30 @@ sudo apt install apache2 -y
 
 sudo cat <<EOT >> /var/www/html/preseed.cfg
 
+
 # Configurações básicas
 d-i debian-installer/locale string pt_BR
 d-i console-setup/layoutcode string br
+d-i keyboard-configuration/xkb-keymap select br
 
 # Configurações de rede
 d-i netcfg/get_hostname string ifpb
 d-i netcfg/get_domain string ifpb.local
+d-i netcfg/choose_interface select auto
 
 # Configurações do relógio
 d-i clock-setup/utc-auto boolean true
 d-i clock-setup/utc boolean true
 d-i time/zone string America/Recife
+d-i clock-setup/ntp-server string a.st1.ntp.br
 
 # Configurações do particionamento
-d-i partman-md/confirm boolean true
+d-i partman-auto/disk string /dev/sda
+d-i partman-auto/method string regular
 d-i partman-partitioning/confirm_write_new_label boolean true
 d-i partman/choose_partition select finish
 d-i partman/confirm boolean true
 d-i partman/confirm_nooverwrite boolean true
-
 
 # Configurações do usuário
 d-i passwd/user-fullname string Aluno
@@ -106,7 +110,8 @@ d-i passwd/root-password-crypted password $1$6xHou2nH$VsjII2lXW87b3bNFC6kET/
 tasksel tasksel/first multiselect standard, ssh-server, gnome-desktop
 
 # Instalação do GRUB
-d-i grub-installer/only_debian boolean true
+#d-i grub-installer/bootdev  string /dev/sda
+d-i grub-installer/bootdev  string default
 
 # Finalização da instalação
 d-i finish-install/reboot_in_progress note
