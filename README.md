@@ -2,7 +2,7 @@
 Repositório com tutorial para instalação de um servidor PXE no Debian 11
 # Tutorial de Instalação do Servidor PXE com Debian 11
 
-Neste tutorial, vamos aprender a configurar um servidor PXE (Preboot Execution Environment) usando o Debian 11 como sistema base. O PXE permite a inicialização de computadores pela rede, facilitando a instalação de sistemas operacionais em várias máquinas. Disponibilizo um script (https://github.com/zeraimundo/PXE-Server/blob/main/pxeserver.sh) para instalação em Servidores Debian com duas placas de rede, sendo a primeira para interface Wan e a segunda para a Lan e serviços DHCP.
+Neste tutorial, vamos aprender a configurar um servidor PXE (Preboot Execution Environment) usando o Debian 11 como sistema base. O PXE permite a inicialização de computadores pela rede, facilitando a instalação de sistemas operacionais em várias máquinas. Disponibilizo um script (https://github.com/zeraimundo/PXE-Server/blob/main/pxeserver.sh) para instalação em Servidores Debian com duas placas de rede, sendo a primeira para interface Wan e a segunda para a Lan e serviços DHCP. O script configura e instala o DHCP Server, TFTP Server e o HTTP Server, sendo este ultimo para disponibilizar as configurações de instalação automática (preseed.cfg). As senhas para acesso ao ambiente são ifpb .
 
 ## Pré-requisitos
 
