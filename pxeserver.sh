@@ -1,3 +1,5 @@
+#!/bin/bash
+
 echo
 echo --------------------- Atualizando o Sistema ----------------------
 echo
@@ -40,7 +42,7 @@ EOT
 systemctl restart isc-dhcp-server
 
 echo
-echo ------------------- Compartilhando a Internet --------------------
+echo ------------------ Compartilhando a Internet -------------------
 echo
 
 export INTERFACE=$(ip route | grep default | cut -d ' ' -f 5)
@@ -75,6 +77,7 @@ chmod -R a+r *
 ln -s debian-installer/amd64/grubx64.efi .
 ln -s debian-installer/amd64/grub .
 systemctl restart tftpd-hpa
+cd -
 
 echo
 echo ---------------- Instalando e configurando HTTP Server -----------------
@@ -82,53 +85,7 @@ echo
 
 sudo apt install apache2 -y
 
-sudo cat <<EOT > /var/www/html/preseed.cfg
-
-
-# Configurações básicas
-d-i debian-installer/locale string pt_BR
-d-i console-setup/layoutcode string br
-d-i keyboard-configuration/xkb-keymap select br
-
-# Configurações de rede
-d-i netcfg/get_hostname string ifpb
-d-i netcfg/get_domain string ifpb.local
-d-i netcfg/choose_interface select auto
-
-# Configurações do relógio
-d-i clock-setup/utc-auto boolean true
-d-i clock-setup/utc boolean true
-d-i time/zone string America/Recife
-d-i clock-setup/ntp-server string a.st1.ntp.br
-
-# Configurações do particionamento
-d-i partman-auto/disk string /dev/sda
-d-i partman-auto/method string regular
-d-i partman-partitioning/confirm_write_new_label boolean true
-d-i partman/choose_partition select finish
-d-i partman/confirm boolean true
-d-i partman/confirm_nooverwrite boolean true
-
-# Configurações do usuário
-d-i passwd/user-fullname string Aluno
-d-i passwd/username string aluno
-d-i passwd/user-password-crypted password $1$6xHou2nH$VsjII2lXW87b3bNFC6kET/
-d-i user-setup/encrypt-home boolean false
-
-# Configurações de autenticação
-d-i passwd/root-login boolean true
-d-i passwd/root-password-crypted password $1$6xHou2nH$VsjII2lXW87b3bNFC6kET/
-
-# Pacotes adicionais
-tasksel tasksel/first multiselect standard, ssh-server, gnome-desktop
-
-# Instalação do GRUB
-#d-i grub-installer/bootdev  string /dev/sda
-d-i grub-installer/bootdev  string default
-
-# Finalização da instalação
-d-i finish-install/reboot_in_progress note
-EOT
+mv preseed.cfg /var/www/html/
 
 sudo systemctl restart apache2.service
 
@@ -136,39 +93,10 @@ echo
 echo ---------------- Configurando instalação automática -------------------
 echo
 
+mv syslinux.cfg /srv/tftp/debian-installer/amd64/boot-screens/
 
-sudo cat <<EOT > /srv/tftp/debian-installer/amd64/boot-screens/syslinux.cfg
-
-# D-I config version 2.0
-# search path for the c32 support libraries (libcom32, libutil etc.)
-path debian-installer/amd64/boot-screens/
-include debian-installer/amd64/boot-screens/menu.cfg
-default debian-installer/amd64/boot-screens/vesamenu.c32
-prompt 0
-timeout 1
-
-label auto
-	menu label ^vCLASS Debian 11.8
-	kernel debian-installer/amd64/linux
-	append auto=true priority=critical vga=788 url=http://10.0.0.1/preseed.cfg initrd=debian-installer/amd64/initrd.gz --- quiet
-EOT
-
-sudo cat <<EOT > /srv/tftp/debian-installer/amd64/boot-screens/menu.cfg
-menu hshift 4
-menu width 70
-
-menu title Debian GNU/Linux vCLASS installer menu
-include debian-installer/amd64/boot-screens/stdmenu.cfg
-EOT
-
-sudo cat <<EOT > /srv/tftp/debian-installer/amd64/boot-screens/adtxt.cfg
-label auto
-	menu label ^Automated install
-	kernel debian-installer/amd64/linux
-	append auto=true priority=critical vga=788 url=http://10.0.0.1/preseed.cfg initrd=debian-installer/amd64/initrd.gz --- quiet 
-EOT
+mv menu.cfg /srv/tftp/debian-installer/amd64/boot-screens/
 
 systemctl restart isc-dhcp-server
 systemctl restart tftpd-hpa
 sudo systemctl restart apache2.service
-
