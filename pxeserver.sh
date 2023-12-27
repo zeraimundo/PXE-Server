@@ -123,6 +123,23 @@ echo
 echo ---------------- Configurando instalação automática -------------------
 echo
 
+
+sudo cat <<EOT > /srv/tftp/debian-installer/amd64/boot-screens/syslinux.cfg
+
+# D-I config version 2.0
+# search path for the c32 support libraries (libcom32, libutil etc.)
+path debian-installer/amd64/boot-screens/
+include debian-installer/amd64/boot-screens/menu.cfg
+default debian-installer/amd64/boot-screens/vesamenu.c32
+prompt 0
+timeout 1
+
+label auto
+	menu label ^vCLASS Debian 11.8
+	kernel debian-installer/amd64/linux
+	append auto=true priority=critical vga=788 url=http://10.0.0.1/preseed.cfg initrd=debian-installer/amd64/initrd.gz --- quiet
+EOT
+
 sudo cat <<EOT > /srv/tftp/debian-installer/amd64/boot-screens/menu.cfg
 menu hshift 4
 menu width 70
