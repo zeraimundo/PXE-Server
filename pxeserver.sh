@@ -62,3 +62,24 @@ chmod -R a+r *
 ln -s debian-installer/amd64/grubx64.efi .
 ln -s debian-installer/amd64/grub .
 systemctl restart tftpd-hpa
+
+echo
+echo ---------------- Instalando e configurando HTTP Server -----------------
+echo
+
+sudo apt install apache2 -y
+
+mv preseed.cfg /var/www/html/
+
+sudo systemctl restart apache2.service
+
+echo
+echo ---------------- Configurando instalação automática -------------------
+echo
+
+mv adtxt.cfg /srv/tftp/debian-installer/amd64/boot-screens/
+
+systemctl restart isc-dhcp-server
+systemctl restart tftpd-hpa
+sudo systemctl restart apache2.service
+
