@@ -69,7 +69,46 @@ echo
 
 sudo apt install apache2 -y
 
-mv preseed.cfg /var/www/html/
+sudo cat <<EOT >> /var/www/html/preseed.cfg
+
+# Configurações básicas
+d-i debian-installer/locale string pt_BR
+d-i console-setup/layoutcode string br
+
+# Configurações de rede
+d-i netcfg/get_hostname string ifpb
+d-i netcfg/get_domain string ifpb.local
+
+# Configurações do relógio
+d-i clock-setup/utc-auto boolean true
+d-i clock-setup/utc boolean true
+d-i time/zone string America/Recife
+
+# Configurações do particionamento
+d-i partman-auto/disk string /dev/sda
+d-i partman-auto/method string regular
+d-i partman-auto/choose_recipe select atomic
+
+# Configurações do usuário
+d-i passwd/user-fullname string Aluno
+d-i passwd/username string aluno
+d-i passwd/user-password-crypted password $6$rounds=5000$abcdefghijklmnopqrstuv/xyz0123456789ABCDEFGHIJKLM
+d-i user-setup/encrypt-home boolean false
+
+# Configurações de autenticação
+d-i passwd/root-login boolean true
+d-i passwd/root-password-crypted password $6$rounds=5000$abcdefghijklmnopqrstuv/xyz0123456789ABCDEFGHIJKLM
+
+# Pacotes adicionais
+tasksel tasksel/first multiselect standard, ssh-server
+
+# Instalação do GRUB
+d-i grub-installer/only_debian boolean true
+d-i grub-installer/with_other_os boolean true
+
+# Finalização da instalação
+d-i finish-install/reboot_in_progress note
+EOT
 
 sudo systemctl restart apache2.service
 
@@ -77,7 +116,17 @@ echo
 echo ---------------- Configurando instalação automática -------------------
 echo
 
-mv adtxt.cfg /srv/tftp/debian-installer/amd64/boot-screens/
+sudo cat <<EOT >> /srv/tftp/debian-installer/amd64/boot-screens/adtxt.cfg
+label expert
+	menu label E^xpert install
+	kernel debian-installer/amd64/linux
+	append priority=low vga=788 initrd=debian-installer/amd64/initrd.gz --- 
+include debian-installer/amd64/boot-screens/rqtxt.cfg
+label auto
+	menu label ^Automated install
+	kernel debian-installer/amd64/linux
+	append auto=true priority=critical vga=788 url=http://10.0.0.1/preseed.cfg initrd=debian-installer/amd64/initrd.gz --- quiet 
+EOT
 
 systemctl restart isc-dhcp-server
 systemctl restart tftpd-hpa
