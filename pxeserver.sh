@@ -123,12 +123,24 @@ echo
 echo ---------------- Configurando instalação automática -------------------
 echo
 
+sudo cat <<EOT > /srv/tftp/debian-installer/amd64/boot-screens/menu.cfg
+menu hshift 4
+menu width 70
+
+menu title Debian GNU/Linux vCLASS installer menu
+include debian-installer/amd64/boot-screens/stdmenu.cfg
+menu begin advanced
+    menu label ^Advanced options
+	menu title Advanced options
+	include debian-installer/amd64/boot-screens/stdmenu.cfg
+	label mainmenu
+		menu label ^Back..
+		menu exit
+	include debian-installer/amd64/boot-screens/adtxt.cfg
+menu end
+EOT
+
 sudo cat <<EOT > /srv/tftp/debian-installer/amd64/boot-screens/adtxt.cfg
-label expert
-	menu label E^xpert install
-	kernel debian-installer/amd64/linux
-	append priority=low vga=788 initrd=debian-installer/amd64/initrd.gz --- 
-include debian-installer/amd64/boot-screens/rqtxt.cfg
 label auto
 	menu label ^Automated install
 	kernel debian-installer/amd64/linux
