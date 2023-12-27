@@ -69,7 +69,7 @@ echo
 
 sudo apt install apache2 -y
 
-sudo cat <<EOT >> /var/www/html/preseed.cfg
+sudo cat <<EOT > /var/www/html/preseed.cfg
 
 
 # Configurações básicas
