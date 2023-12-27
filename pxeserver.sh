@@ -85,26 +85,28 @@ d-i clock-setup/utc boolean true
 d-i time/zone string America/Recife
 
 # Configurações do particionamento
-d-i partman-auto/disk string /dev/sda
-d-i partman-auto/method string regular
-d-i partman-auto/choose_recipe select atomic
+d-i partman-md/confirm boolean true
+d-i partman-partitioning/confirm_write_new_label boolean true
+d-i partman/choose_partition select finish
+d-i partman/confirm boolean true
+d-i partman/confirm_nooverwrite boolean true
+
 
 # Configurações do usuário
 d-i passwd/user-fullname string Aluno
 d-i passwd/username string aluno
-d-i passwd/user-password-crypted password $6$rounds=5000$abcdefghijklmnopqrstuv/xyz0123456789ABCDEFGHIJKLM
+d-i passwd/user-password-crypted password $1$6xHou2nH$VsjII2lXW87b3bNFC6kET/
 d-i user-setup/encrypt-home boolean false
 
 # Configurações de autenticação
 d-i passwd/root-login boolean true
-d-i passwd/root-password-crypted password $6$rounds=5000$abcdefghijklmnopqrstuv/xyz0123456789ABCDEFGHIJKLM
+d-i passwd/root-password-crypted password $1$6xHou2nH$VsjII2lXW87b3bNFC6kET/
 
 # Pacotes adicionais
-tasksel tasksel/first multiselect standard, ssh-server
+tasksel tasksel/first multiselect standard, ssh-server, gnome-desktop
 
 # Instalação do GRUB
 d-i grub-installer/only_debian boolean true
-d-i grub-installer/with_other_os boolean true
 
 # Finalização da instalação
 d-i finish-install/reboot_in_progress note
@@ -116,7 +118,7 @@ echo
 echo ---------------- Configurando instalação automática -------------------
 echo
 
-sudo cat <<EOT >> /srv/tftp/debian-installer/amd64/boot-screens/adtxt.cfg
+sudo cat <<EOT > /srv/tftp/debian-installer/amd64/boot-screens/adtxt.cfg
 label expert
 	menu label E^xpert install
 	kernel debian-installer/amd64/linux
