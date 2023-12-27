@@ -159,15 +159,6 @@ menu width 70
 
 menu title Debian GNU/Linux vCLASS installer menu
 include debian-installer/amd64/boot-screens/stdmenu.cfg
-menu begin advanced
-    menu label ^Advanced options
-	menu title Advanced options
-	include debian-installer/amd64/boot-screens/stdmenu.cfg
-	label mainmenu
-		menu label ^Back..
-		menu exit
-	include debian-installer/amd64/boot-screens/adtxt.cfg
-menu end
 EOT
 
 sudo cat <<EOT > /srv/tftp/debian-installer/amd64/boot-screens/adtxt.cfg
