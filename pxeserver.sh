@@ -11,7 +11,7 @@ echo
 echo --------------------- Instalando dependencias ---------------------
 echo
 
-sudo apt install isc-dhcp-server tftpd-hpa wget -y
+sudo apt install isc-dhcp-server tftpd-hpa apache2 wget -y
 
 echo
 echo ------------------- Configurando o DHCP Server --------------------
@@ -39,8 +39,6 @@ INTERFACESv4="enp0s8"
 INTERFACESv6=""
 EOT
 
-systemctl restart isc-dhcp-server
-
 echo
 echo ------------------ Compartilhando a Internet -------------------
 echo
@@ -66,8 +64,6 @@ TFTP_ADDRESS="0.0.0.0:69"
 TFTP_OPTIONS="--secure"
 EOT
 
-sudo systemctl restart tftpd-hpa
-
 sudo mkdir  /srv/tftp
 cd  /srv/tftp
 wget https://deb.debian.org/debian/dists/Debian11.8/main/installer-amd64/current/images/netboot/netboot.tar.gz
@@ -83,11 +79,7 @@ echo
 echo ---------------- Instalando e configurando HTTP Server -----------------
 echo
 
-sudo apt install apache2 -y
-
 mv preseed.cfg /var/www/html/
-
-sudo systemctl restart apache2.service
 
 echo
 echo ---------------- Configurando instalação automática -------------------
